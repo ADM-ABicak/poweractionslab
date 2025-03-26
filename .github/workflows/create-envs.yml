@@ -16,7 +16,7 @@ on:
       user_id: 
         description: 'AAD object id for the user'
         required: true
-        default: 'example-aad-id' # Replace with default value or leave as placeholder
+        default: '707f9714-00fd-4939-95ac-4cb3f931ad00' # Replace with default value or leave as placeholder
 
 # Do Not change these values
 
