@@ -31,6 +31,16 @@ jobs:
       with:
         lfs: true
 
+    - name: Sanitize env_name
+      id: sanitize_env_name
+      run: |
+        sanitized_name="${{ github.event.inputs.env_name }}"
+
+        # Replace spaces with hyphens
+        sanitized_name=$(echo "$sanitized_name" | sed 's/ /-/g')
+
+        echo "sanitized_name=$sanitized_name" >> $GITHUB_ENV
+
     - name: Create Developer Environment
       uses: microsoft/powerplatform-actions/create-environment@v0
       with:
@@ -39,7 +49,7 @@ jobs:
         tenant-id: ${{ secrets.TENANT_ID }}
         name: ${{ github.event.inputs.env_name }}_Dev
         type: Developer
-        domain: ${{ github.event.inputs.env_name.replace(' ', '-') }}Dev
+        domain: ${{ env.sanitized_name }}Dev
 
     - name: assign-user to developer environment
       uses: microsoft/powerplatform-actions/assign-user@v0
@@ -47,7 +57,7 @@ jobs:
         app-id: ${{ secrets.CLIENT_ID }}
         client-secret: ${{ secrets.POWERPLATFORMSPN }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment: 'https://${{ github.event.inputs.env_name.replace(' ', '-') }}Dev.dynamics.com'
+        environment: 'https://${{ env.sanitized_name }}Dev.dynamics.com'
         user: ${{ github.event.inputs.user_id }}
         role: System Administrator
 
@@ -59,7 +69,7 @@ jobs:
         tenant-id: ${{ secrets.TENANT_ID }}
         name: ${{ github.event.inputs.env_name }}_Test
         type: Sandbox
-        domain: ${{ github.event.inputs.env_name.replace(' ', '-') }}Test
+        domain: ${{ env.sanitized_name }}Test
 
     - name: assign-user to test environment
       uses: microsoft/powerplatform-actions/assign-user@v0
@@ -67,7 +77,7 @@ jobs:
         app-id: ${{ secrets.CLIENT_ID }}
         client-secret: ${{ secrets.POWERPLATFORMSPN }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment: 'https://${{ github.event.inputs.env_name.replace(' ', '-') }}Test.crm.dynamics.com'
+        environment: 'https://${{ env.sanitized_name }}Test.crm.dynamics.com'
         user: ${{ github.event.inputs.user_id }}
         role: System Administrator
 
@@ -79,7 +89,7 @@ jobs:
         tenant-id: ${{ secrets.TENANT_ID }}
         name: ${{ github.event.inputs.env_name }}_Prod
         type: Production
-        domain: ${{ github.event.inputs.env_name.replace(' ', '-') }}Prod
+        domain: ${{ env.sanitized_name }}Prod
 
     - name: assign-user to Prod environment
       uses: microsoft/powerplatform-actions/assign-user@v0
@@ -87,6 +97,6 @@ jobs:
         app-id: ${{ secrets.CLIENT_ID }}
         client-secret: ${{ secrets.POWERPLATFORMSPN }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment: 'https://${{ github.event.inputs.env_name.replace(' ', '-') }}Prod.crm.dynamics.com'
+        environment: 'https://${{ env.sanitized_name }}Prod.crm.dynamics.com'
         user: ${{ github.event.inputs.user_id }}
         role: System Administrator
