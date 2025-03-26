@@ -29,10 +29,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          lfs: false
+          lfs: true
   
       - name: Create Developer Environment
-        uses: microsoft/powerplatform-actions/create-environment@v0
+        uses: microsoft/powerplatform-actions/create-environment@v1.8.0
         with:
           app-id: ${{ secrets.CLIENT_ID }}
           client-secret: ${{ secrets.POWERPLATFORMSPN }}
@@ -42,7 +42,7 @@ jobs:
           domain: ${{ github.event.inputs.env_name }}Dev
   
       - name: assign-user to developer environment
-        uses: microsoft/powerplatform-actions/assign-user@v0
+        uses: microsoft/powerplatform-actions/assign-user@v1.8.0
         with:
           app-id: ${{ secrets.CLIENT_ID }}
           client-secret: ${{ secrets.POWERPLATFORMSPN }}
@@ -52,7 +52,7 @@ jobs:
           role: System Administrator
   
       - name: Create Test Environment
-        uses: microsoft/powerplatform-actions/create-environment@v0
+        uses: microsoft/powerplatform-actions/create-environment@v1.8.0
         with:
           app-id: ${{ secrets.CLIENT_ID }}
           client-secret: ${{ secrets.POWERPLATFORMSPN }}
@@ -62,7 +62,7 @@ jobs:
           domain: ${{ github.event.inputs.env_name }}Test
   
       - name: assign-user to test environment
-        uses: microsoft/powerplatform-actions/assign-user@v0
+        uses: microsoft/powerplatform-actions/assign-user@v1.8.0
         with:
           app-id: ${{ secrets.CLIENT_ID }}
           client-secret: ${{ secrets.POWERPLATFORMSPN }}
@@ -72,7 +72,7 @@ jobs:
           role: System Administrator
   
       - name: Create Production Environment
-        uses: microsoft/powerplatform-actions/create-environment@v0
+        uses: microsoft/powerplatform-actions/create-environment@v1.8.0
         with:
           app-id: ${{ secrets.CLIENT_ID }}
           client-secret: ${{ secrets.POWERPLATFORMSPN }}
@@ -82,7 +82,7 @@ jobs:
           domain: ${{ github.event.inputs.env_name }}Prod
   
       - name: assign-user to Prod environment
-        uses: microsoft/powerplatform-actions/assign-user@v0
+        uses: microsoft/powerplatform-actions/assign-user@v1.8.0
         with:
           app-id: ${{ secrets.CLIENT_ID }}
           client-secret: ${{ secrets.POWERPLATFORMSPN }}
