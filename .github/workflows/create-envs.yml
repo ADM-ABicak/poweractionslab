@@ -5,10 +5,10 @@ name: Create Dev Test and Prod Environments
 on:
   workflow_dispatch:
     inputs:
-      env_name: 107_Aykut
+      env_name:
         description: 'Name for the environment to be created'
         required: true
-        default: 'example-environment' # Default value, change as needed
+        default: '107 - Aykut' # Default value, change as needed
       client_id: 
         description: 'Service principal client id'
         required: true
