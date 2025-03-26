@@ -1,4 +1,6 @@
 name: Create Dev Test and Prod Environments
+# clean up the environment for the next demo
+#  clean up environment tasks for QA and Prod 
 
 on:
   workflow_dispatch:
@@ -6,7 +8,7 @@ on:
       env_name:
         description: 'Name for the environment to be created'
         required: true
-        default: 'Test-Aykut' # Default value, change as needed
+        default: '107 Aykut' # Default value, change as needed
       client_id: 
         description: 'Service principal client id'
         required: true
@@ -15,6 +17,8 @@ on:
         description: 'AAD object id for the user'
         required: true
         default: '707f9714-00fd-4939-95ac-4cb3f931ad00' # Replace with default value or leave as placeholder
+
+# Do Not change these values
 
 jobs:
   Create-Environments:
@@ -27,13 +31,6 @@ jobs:
       with:
         lfs: true
 
-    # Sleep for 30 seconds before attempting the next action download
-    - name: Sleep before downloading PowerPlatform Actions
-      run: |
-        echo "Waiting for 30 seconds before proceeding with the next step."
-        sleep 30
-
-    # Retry the download of the PowerPlatform Actions after waiting
     - name: Create Developer Environment
       uses: microsoft/powerplatform-actions/create-environment@v0
       with:
@@ -54,12 +51,6 @@ jobs:
         user: ${{ github.event.inputs.user_id }}
         role: System Administrator
 
-    # Repeat the process for other environments as needed, each with a sleep delay
-    - name: Sleep before creating Test Environment
-      run: |
-        echo "Waiting for 30 seconds before creating the test environment."
-        sleep 30
-
     - name: Create Test Environment
       uses: microsoft/powerplatform-actions/create-environment@v0
       with:
@@ -79,12 +70,6 @@ jobs:
         environment: 'https://${{ github.event.inputs.env_name }}Test.crm.dynamics.com'
         user: ${{ github.event.inputs.user_id }}
         role: System Administrator
-
-    # Another sleep before creating the production environment
-    - name: Sleep before creating Production Environment
-      run: |
-        echo "Waiting for 30 seconds before creating the production environment."
-        sleep 30
 
     - name: Create Production Environment
       uses: microsoft/powerplatform-actions/create-environment@v0
