@@ -31,12 +31,11 @@ jobs:
         with:
           lfs: true
 
-      # Installiere Power Apps CLI (PAC) über npm
-      - name: Install Power Apps CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y npm
-          sudo npm install -g pac-cli
+      # Installiere Power Apps CLI (PAC) über actions-install
+      - name: Install Power Apps CLI (PAC)
+        uses: microsoft/powerplatform-actions/actions-install@v1
+        with:
+          pac-version: latest
 
       - name: Create Developer Environment
         uses: microsoft/powerplatform-actions/create-environment@v1.8.0
