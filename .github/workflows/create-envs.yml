@@ -1,6 +1,4 @@
 name: Create Dev Test and Prod Environments
-# clean up the environment for the next demo
-# clean up environment tasks for QA and Prod
 
 on:
   workflow_dispatch:
@@ -18,8 +16,6 @@ on:
         required: true
         default: '707f9714-00fd-4939-95ac-4cb3f931ad00' # Replace with default value or leave as placeholder
 
-# Do Not change these values
-
 jobs:
   Create-Environments:
     runs-on: ubuntu-latest
@@ -31,16 +27,13 @@ jobs:
       with:
         lfs: true
 
-    - name: Sanitize env_name
-      id: sanitize_env_name
+    # Sleep for 30 seconds before attempting the next action download
+    - name: Sleep before downloading PowerPlatform Actions
       run: |
-        sanitized_name="${{ github.event.inputs.env_name }}"
+        echo "Waiting for 30 seconds before proceeding with the next step."
+        sleep 30
 
-        # Replace spaces with hyphens
-        sanitized_name=$(echo "$sanitized_name" | sed 's/ /-/g')
-
-        echo "sanitized_name=$sanitized_name" >> $GITHUB_ENV
-
+    # Retry the download of the PowerPlatform Actions after waiting
     - name: Create Developer Environment
       uses: microsoft/powerplatform-actions/create-environment@v0
       with:
@@ -49,7 +42,7 @@ jobs:
         tenant-id: ${{ secrets.TENANT_ID }}
         name: ${{ github.event.inputs.env_name }}_Dev
         type: Developer
-        domain: ${{ env.sanitized_name }}Dev
+        domain: ${{ github.event.inputs.env_name }}Dev
 
     - name: assign-user to developer environment
       uses: microsoft/powerplatform-actions/assign-user@v0
@@ -57,9 +50,15 @@ jobs:
         app-id: ${{ secrets.CLIENT_ID }}
         client-secret: ${{ secrets.POWERPLATFORMSPN }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment: 'https://${{ env.sanitized_name }}Dev.dynamics.com'
+        environment: 'https://${{ github.event.inputs.env_name }}Dev.dynamics.com'
         user: ${{ github.event.inputs.user_id }}
         role: System Administrator
+
+    # Repeat the process for other environments as needed, each with a sleep delay
+    - name: Sleep before creating Test Environment
+      run: |
+        echo "Waiting for 30 seconds before creating the test environment."
+        sleep 30
 
     - name: Create Test Environment
       uses: microsoft/powerplatform-actions/create-environment@v0
@@ -69,7 +68,7 @@ jobs:
         tenant-id: ${{ secrets.TENANT_ID }}
         name: ${{ github.event.inputs.env_name }}_Test
         type: Sandbox
-        domain: ${{ env.sanitized_name }}Test
+        domain: ${{ github.event.inputs.env_name }}Test
 
     - name: assign-user to test environment
       uses: microsoft/powerplatform-actions/assign-user@v0
@@ -77,9 +76,15 @@ jobs:
         app-id: ${{ secrets.CLIENT_ID }}
         client-secret: ${{ secrets.POWERPLATFORMSPN }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment: 'https://${{ env.sanitized_name }}Test.crm.dynamics.com'
+        environment: 'https://${{ github.event.inputs.env_name }}Test.crm.dynamics.com'
         user: ${{ github.event.inputs.user_id }}
         role: System Administrator
+
+    # Another sleep before creating the production environment
+    - name: Sleep before creating Production Environment
+      run: |
+        echo "Waiting for 30 seconds before creating the production environment."
+        sleep 30
 
     - name: Create Production Environment
       uses: microsoft/powerplatform-actions/create-environment@v0
@@ -89,7 +94,7 @@ jobs:
         tenant-id: ${{ secrets.TENANT_ID }}
         name: ${{ github.event.inputs.env_name }}_Prod
         type: Production
-        domain: ${{ env.sanitized_name }}Prod
+        domain: ${{ github.event.inputs.env_name }}Prod
 
     - name: assign-user to Prod environment
       uses: microsoft/powerplatform-actions/assign-user@v0
@@ -97,6 +102,6 @@ jobs:
         app-id: ${{ secrets.CLIENT_ID }}
         client-secret: ${{ secrets.POWERPLATFORMSPN }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment: 'https://${{ env.sanitized_name }}Prod.crm.dynamics.com'
+        environment: 'https://${{ github.event.inputs.env_name }}Prod.crm.dynamics.com'
         user: ${{ github.event.inputs.user_id }}
         role: System Administrator
