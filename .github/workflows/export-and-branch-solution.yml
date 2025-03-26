@@ -33,13 +33,12 @@ permissions:
 jobs:
   export-from-dev:
     runs-on: windows-latest
-    timeout-minutes: 180  # Erhöht das Timeout auf 3 Stunden
     # or you can say runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         lfs: true
 
