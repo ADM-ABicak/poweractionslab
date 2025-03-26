@@ -1,6 +1,6 @@
 name: Create Dev Test and Prod Environments
 # clean up the environment for the next demo
-#  clean up environment tasks for QA and Prod 
+# clean up environment tasks for QA and Prod 
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
       env_name:
         description: 'Name for the environment to be created'
         required: true
-        default: '107_Aykut' # Default value, change as needed
+        default: '107 Aykut' # Default value, change as needed
       client_id: 
         description: 'Service principal client id'
         required: true
@@ -17,8 +17,6 @@ on:
         description: 'AAD object id for the user'
         required: true
         default: '707f9714-00fd-4939-95ac-4cb3f931ad00' # Replace with default value or leave as placeholder
-
-# Do Not change these values
 
 jobs:
   Create-Environments:
@@ -39,7 +37,7 @@ jobs:
         tenant-id: ${{ secrets.TENANT_ID }}
         name: ${{ github.event.inputs.env_name }}_Dev
         type: Developer
-        domain: ${{ github.event.inputs.env_name }}Dev
+        domain: ${{ github.event.inputs.env_name | replace(" ", "-") }}Dev  # Ersetzt Leerzeichen durch Bindestriche
 
     - name: assign-user to developer environment
       uses: microsoft/powerplatform-actions/assign-user@v0
@@ -47,7 +45,7 @@ jobs:
         app-id: ${{ secrets.CLIENT_ID }}
         client-secret: ${{ secrets.POWERPLATFORMSPN }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment: 'https://${{ github.event.inputs.env_name }}Dev.dynamics.com'
+        environment: 'https://${{ github.event.inputs.env_name | replace(" ", "-") }}Dev.dynamics.com'
         user: ${{ github.event.inputs.user_id }}
         role: System Administrator
 
@@ -59,7 +57,7 @@ jobs:
         tenant-id: ${{ secrets.TENANT_ID }}
         name: ${{ github.event.inputs.env_name }}_Test
         type: Sandbox
-        domain: ${{ github.event.inputs.env_name }}Test
+        domain: ${{ github.event.inputs.env_name | replace(" ", "-") }}Test
 
     - name: assign-user to test environment
       uses: microsoft/powerplatform-actions/assign-user@v0
@@ -67,7 +65,7 @@ jobs:
         app-id: ${{ secrets.CLIENT_ID }}
         client-secret: ${{ secrets.POWERPLATFORMSPN }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment: 'https://${{ github.event.inputs.env_name }}Test.crm.dynamics.com'
+        environment: 'https://${{ github.event.inputs.env_name | replace(" ", "-") }}Test.crm.dynamics.com'
         user: ${{ github.event.inputs.user_id }}
         role: System Administrator
 
@@ -79,7 +77,7 @@ jobs:
         tenant-id: ${{ secrets.TENANT_ID }}
         name: ${{ github.event.inputs.env_name }}_Prod
         type: Production
-        domain: ${{ github.event.inputs.env_name }}Prod
+        domain: ${{ github.event.inputs.env_name | replace(" ", "-") }}Prod
 
     - name: assign-user to Prod environment
       uses: microsoft/powerplatform-actions/assign-user@v0
@@ -87,6 +85,6 @@ jobs:
         app-id: ${{ secrets.CLIENT_ID }}
         client-secret: ${{ secrets.POWERPLATFORMSPN }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment: 'https://${{ github.event.inputs.env_name }}Prod.crm.dynamics.com'
+        environment: 'https://${{ github.event.inputs.env_name | replace(" ", "-") }}Prod.crm.dynamics.com'
         user: ${{ github.event.inputs.user_id }}
         role: System Administrator
