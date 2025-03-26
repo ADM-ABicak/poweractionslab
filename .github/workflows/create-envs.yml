@@ -6,7 +6,7 @@ on:
       env_name:
         description: 'Name for the environment to be created'
         required: true
-        default: '107 Aykut' # Default value, change as needed
+        default: 'Test Aykut' # Default value, change as needed
       client_id: 
         description: 'Service principal client id'
         required: true
