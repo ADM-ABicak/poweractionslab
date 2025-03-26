@@ -1,3 +1,25 @@
+name: Create Dev Test and Prod Environments
+# clean up the environment for the next demo
+# clean up environment tasks for QA and Prod 
+
+on:
+  workflow_dispatch:
+    inputs:
+      env_name:
+        description: 'Name for the environment to be created'
+        required: true
+        default: 'TestAykut' # Default value, change as needed
+      client_id: 
+        description: 'Service principal client id'
+        required: true
+        default: '3d50fc54-97a3-40d1-b976-ef0af2206189' # Deine Client-ID
+      user_id: 
+        description: 'AAD object id for the user'
+        required: true
+        default: 'd06e1709-6131-4a5d-beaa-495c001733a0' # Replace with default value or leave as placeholder
+
+# Do Not change these values
+
 jobs:
   Create-Environments:
     runs-on: ubuntu-latest
